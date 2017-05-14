@@ -1,4 +1,5 @@
 from flask import Flask, request
+import random
 import json
 import csv
 import sys
@@ -7,11 +8,20 @@ from datetime import timedelta
 
 app = Flask(__name__)
 
-def getLifeSpan( breed ):
+messages = [("Princess Di lived to be 36 but {name} probably wont. {name}" +
+             " has {time_left} hours left before {pronoun} experiences" +
+             " statistical death."),
+            ("{name} is going through a mid life crisis. {pronoun} has" +
+             " {time_left} left to live")
+            ]
+
+
+def getLifeSpan(breed):
     csv_file = csv.reader(open('data.csv', "rb"), delimiter=",")
     for row in csv_file:
         if breed == row[0]:
-             return int(row[1])
+            return int(row[1])
+
 
 def getTimeRemaining( age, span_years, timeType ):
     timeRem_sec = span_years * 365 * 24 * 60 * 60 - age
@@ -30,10 +40,18 @@ def main():
     age = int(request.args.get('age'))
     name = str(request.args.get('name'))
     pronoun = str(request.args.get('pronoun'))
+
     # dead = str(request.args.get('dead'))
 
-    span = str(getTimeRemaining(age, getLifeSpan( breed ), "date"))
-    return json.dumps({"breed": breed, "age": age, "name": name, "pronoun": pronoun, "span": span})
+
+    span = getLifeSpan(breed)
+
+    message = random.choice(messages).format(name=name,
+                                             time_left=span-age,
+                                             pronoun=pronoun)
+
+    return json.dumps({"message": message})
+
 
 if __name__ == "__main__":
     app.run()
