@@ -6,8 +6,8 @@ import sys
 
 app = Flask(__name__)
 
-messages = [("Princess Di lived to be 36 and so has {name}. {name} has " +
-             "{time_left} hours left before {pronoun} experiences" +
+messages = [("Princess Di lived to be 36 but {name} probably wont. {name}" +
+             " has {time_left} hours left before {pronoun} experiences" +
              " statistical death."),
             ("{name} is going through a mid life crisis. {pronoun} has" +
              " {time_left} left to live")
