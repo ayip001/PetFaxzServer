@@ -2,6 +2,7 @@ from flask import Flask, request
 import random
 import json
 import csv
+import sys
 
 app = Flask(__name__)
 
@@ -13,6 +14,13 @@ messages = [("Princess Di lived to be 36 and so has {name}. {name} has " +
             ]
 
 
+def getLifeSpan(breed):
+    csv_file = csv.reader(open('data.csv', "rb"), delimiter=",")
+    for row in csv_file:
+        if breed == row[0]:
+            return int(row[1])
+
+
 @app.route("/generatemsg")
 def main():
     breed = str(request.args.get('breed'))
@@ -22,10 +30,10 @@ def main():
 
     # dead = str(request.args.get('dead'))
 
-    time_left = 0
+    span = getLifeSpan(breed)
 
     message = random.choice(messages).format(name=name,
-                                             time_left=time_left,
+                                             time_left=span-age,
                                              pronoun=pronoun)
 
     return json.dumps({"message": message})
