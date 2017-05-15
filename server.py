@@ -12,9 +12,7 @@ messages = [("Princess Di lived to be 36 but {name} probably wont. {name}" +
              " has {time_left} years left before {pronoun} experiences" +
              " statistical death."),
             ("{name} is going through a mid life crisis. {pronoun} has" +
-             " {time_left} years left to live"),
-            ()
-            ]
+             " {time_left} years left to live"), ("{pronoun} is most likely to die from {disease} in {time_left} years" )]
 
 
 def getLifeSpan(breed):
@@ -23,20 +21,20 @@ def getLifeSpan(breed):
         if breed == row[0]:
             return int(row[1])
 
-# def getMostLikelyDisease(breed):
-#     csv_file = csv.reader(open('data.csv', "rb"), delimiter=",")
-#     for row in csv_file:
-#         if breed == row[0]:
-#             return int(row[2])
+def getMostLikelyDisease(breed):
+    csv_file = csv.reader(open('data/breed-ages.csv', "rb"), delimiter=",")
+    for row in csv_file:
+        if breed == row[0]:
+            return str(row[3])
 
-def getCelebrity ():
-    csv_file = csv.reader(open('data/celebrities.csv', "rb"), delimiter=",")
-    lengthofcsv = len(list(csv_file))
-    position = random.randrange(0, lengthofcsv)
-    # this for loop is stupid and unnecessary but dont have time to do it better
-    for row in csv_file: 
-        if row == position:
-            return row
+# def getCelebrity ():
+#     lengthofcsv = len(list(csv_file))
+#     position = random.randrange(0, lengthofcsv)
+#     csv_file = csv.reader(open('data/celebrities.csv', "rb"), delimiter=",")
+#     for row in csv_file: 
+#         print "hi"
+#         # if row == position:
+#         #     return row
 
 
 def getTimeRemaining(age, span_years, timeType ):
@@ -52,7 +50,6 @@ def getTimeRemaining(age, span_years, timeType ):
 
 @app.route("/generatemsg")
 def main():
-    getCelebrity();
     breed = str(request.args.get('breed'))
     age = int(request.args.get('age'))
     name = str(request.args.get('name'))
@@ -60,10 +57,9 @@ def main():
 
 
     span = getLifeSpan(breed)
-
     message = random.choice(messages).format(name=name,
                                              time_left=getTimeRemaining(age, span, 'years'),
-                                             pronoun=pronoun)
+                                             pronoun=pronoun, disease=getMostLikelyDisease(breed))
 
     return json.dumps({"message": message})
 
