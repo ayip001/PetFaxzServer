@@ -12,7 +12,7 @@ messages = [("Princess Di lived to be 36 but {name} probably wont. {name}" +
              " has {time_left} years left before {pronoun} experiences" +
              " statistical death."),
             ("{name} is going through a mid life crisis. {pronoun} has" +
-             " {time_left} years left to live"), ("{pronoun} is most likely to die from {disease} in {time_left} years" )]
+             " {time_left} years left to live"), ("{pronoun} is most likely to die from {disease} in {time_left} years")]
 
 
 def getLifeSpan(breed):
@@ -58,7 +58,7 @@ def main():
 
     span = getLifeSpan(breed)
     message = random.choice(messages).format(name=name,
-                                             time_left=getTimeRemaining(age, span, 'years'),
+                                             time_left=span-age,
                                              pronoun=pronoun, disease=getMostLikelyDisease(breed))
 
     return json.dumps({"message": message})
